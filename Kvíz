@@ -123,10 +123,19 @@ const questions = [
 const parties = [];
 
 for (let i = 1; i <= 27; i++) {
+   const parties = [
+  { name: "Strana 1", answers: [1,1,1,1,1,1,1,1,1,1,1,1,1] },
+  { name: "Strana 2", answers: [2,2,2,2,2,2,2,2,2,2,2,2,2] },
+  { name: "Strana 3", answers: [3,3,3,3,3,3,3,3,3,3,3,3,3] },
+  { name: "Strana 4", answers: [4,4,4,4,4,4,4,4,4,4,4,4,4] },
+];
+
+for (let i = 6; i <= 27; i++) {
   parties.push({
-    name: "Strana 1","Strana 2", "Strana 3", "Strana 4", "Strana 5"
-    answers: [1,1,1,1,1,1,1,1,1,1,1,1,1], [2,2,2,2,2,2,2,2,2,2,2,2,2], [3,3,3,3,3,3,3,3,3,3,3,3,3], [4,4,4,4,4,4,4,4,4,4,4,4,4], [5,5,5,5,5,5,5,5,5,5,5,5,5]
+    name: `Strana ${i}`,
+    answers: [Math.floor(Math.random()*5)+1, Math.floor(Math.random()*5)+1, /* ... repeat 13 times ... */]
   });
+}
 }
 
 // -----------------------------
@@ -143,8 +152,8 @@ questions.forEach((q, index) => {
     <select id="q${index}">
       <option value="1">a</option>
       <option value="2">b</option>
-      <option value="4">c</option>
-      <option value="5">d</option>
+      <option value="3">c</option>
+      <option value="4">d</option>
     </select>
   `;
 
