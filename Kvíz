@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Volební kalkulačka</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f9;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+h1 {
+  text-align: center;
+}
+
+.question {
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+select {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  font-size: 16px;
+  background: #0077ff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+button:hover {
+  background: #005ed1;
+}
+
+.results {
+  margin-top: 40px;
+}
+
+.result-item {
+  margin-bottom: 15px;
+}
+
+.progress-bar {
+  height: 20px;
+  background: #ddd;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #0077ff;
+  text-align: right;
+  color: white;
+  padding-right: 8px;
+  font-size: 12px;
+  line-height: 20px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Volební kalkulačka</h1>
+  <form id="quizForm"></form>
+  <button onclick="calculate()">Vyhodnotit shodu</button>
+  <div class="results" id="results"></div>
+</div>
+
+<script>
+
+// -----------------------------
+// OTÁZKY (můžeš upravit texty)
+// -----------------------------
+const questions = [
+"1",
+"2",
+"3",
+"4",
+"5",
+"6",
+"7",
+"8",
+"9",
+"10",
+"11",
+"12",
+"13"
+];
+
+// -----------------------------
+// 27 STRAN (ukázková data)
+// ZDE můžeš nastavit reálné odpovědi
+// škála 1–5 (1 = silně nesouhlasím, 5 = silně souhlasím)
+// -----------------------------
+const parties = [];
+
+for (let i = 1; i <= 27; i++) {
+  parties.push({
+    name: "Strana 1","Strana 2", "Strana 3", "Strana 4", "Strana 5"
+    answers: [1,1,1,1,1,1,1,1,1,1,1,1,1], [2,2,2,2,2,2,2,2,2,2,2,2,2], [3,3,3,3,3,3,3,3,3,3,3,3,3], [4,4,4,4,4,4,4,4,4,4,4,4,4], [5,5,5,5,5,5,5,5,5,5,5,5,5]
+  });
+}
+
+// -----------------------------
+// GENEROVÁNÍ FORMULÁŘE
+// -----------------------------
+const form = document.getElementById("quizForm");
+
+questions.forEach((q, index) => {
+  const div = document.createElement("div");
+  div.classList.add("question");
+
+  div.innerHTML = `
+    <label>${index+1}. ${q}</label>
+    <select id="q${index}">
+      <option value="1">a</option>
+      <option value="2">b</option>
+      <option value="4">c</option>
+      <option value="5">d</option>
+    </select>
+  `;
+
+  form.appendChild(div);
+});
+
+// -----------------------------
+// VÝPOČET SHODY
+// -----------------------------
+function calculate() {
+
+  const userAnswers = [];
+
+  for (let i = 0; i < questions.length; i++) {
+    userAnswers.push(parseInt(document.getElementById("q"+i).value));
+  }
+
+  const results = parties.map(party => {
+    let score = 0;
+    const maxScore = questions.length * 4;
+
+    for (let i = 0; i < questions.length; i++) {
+      score += 4 - Math.abs(userAnswers[i] - party.answers[i]);
+    }
+
+    return {
+      name: party.name,
+      percentage: Math.round((score / maxScore) * 100)
+    };
+  });
+
+  results.sort((a,b) => b.percentage - a.percentage);
+
+  displayResults(results);
+}
+
+// -----------------------------
+// ZOBRAZENÍ VÝSLEDKŮ
+// -----------------------------
+function displayResults(results) {
+  const resultsDiv = document.getElementById("results");
+  resultsDiv.innerHTML = "<h2>Vaše shoda:</h2>";
+
+  results.forEach(r => {
+    const div = document.createElement("div");
+    div.classList.add("result-item");
+
+    div.innerHTML = `
+      <strong>${r.name}</strong>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width:${r.percentage}%">
+          ${r.percentage}%
+        </div>
+      </div>
+    `;
+
+    resultsDiv.appendChild(div);
+  });
+}
+
+</script>
+
+</body>
+</html>
